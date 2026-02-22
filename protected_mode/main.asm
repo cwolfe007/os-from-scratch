@@ -15,7 +15,6 @@ call print_string
 call switch_to_pm 
 
 jmp $ ; Hang
-; Padding and magic number.
 %include "print_string.asm"
 %include "gdt.asm"
 %include "print_string_pm.asm"
@@ -25,15 +24,16 @@ jmp $ ; Hang
 ; initializing protected mode
 [bits 32]
 BEGIN_PM:
-  mov ebx, MSG_PROC_MODE
+  mov ebx, MSG_PROT_MODE
   call print_string_pm
   jmp $ ; hang 
 
 ; Data
 MSG_REAL_MODE db "Started in 16-bit real mode", 0
-MSG_PROC_MODE db "landed in 32-bit protected mode", 0
+MSG_PROT_MODE db "landed in 32-bit protected mode", 0
 HELLO_MSG db 'Hello, World!', 0 ; <-- The zero on the end tells our routine
 GOODBYE_MSG db 'Goodbye!', 0
 
+; Padding and magic number.
 times 510-($-$$) db 0
 dw 0xaa55
