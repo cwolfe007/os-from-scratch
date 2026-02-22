@@ -31,7 +31,7 @@ jmp $ ; Hang
 ; initializing protected mode
 [bits 32]
 BEGIN_PM:
-  move ebx, MSG_PROC_MODE
+  mov ebx, MSG_PROC_MODE
   call print_string_pm
   jmp $ ; hang 
 
