@@ -3,12 +3,6 @@
 ;
 [org 0x7c00] ; Tell the assembler where this code will be loaded
 
-; Data
-HELLO_MSG:
-db 'Hello, World!', 0 ; <-- The zero on the end tells our routine
-GOODBYE_MSG:
-db 'Goodbye!', 0
-
 mov bx, HELLO_MSG ; Use BX as a parameter to our function, so
 call print_string
 
@@ -35,7 +29,11 @@ BEGIN_PM:
   call print_string_pm
   jmp $ ; hang 
 
-MSG_REAL_MODE db "Started in 16-bit real mode"
-MSG_PROC_MODE db "landed in 32-bit protected mode"
+; Data
+MSG_REAL_MODE db "Started in 16-bit real mode", 0
+MSG_PROC_MODE db "landed in 32-bit protected mode", 0
+HELLO_MSG db 'Hello, World!', 0 ; <-- The zero on the end tells our routine
+GOODBYE_MSG db 'Goodbye!', 0
+
 times 510-($-$$) db 0
 dw 0xaa55
