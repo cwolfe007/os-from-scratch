@@ -18,7 +18,7 @@ gdt_code : ; segment descriptor code
 gdt_data: ; segment descriptor data
   dw 0xffff ; limit bits 0 -15
   dw 0x0 ; base bits 0 - 15
-  dw 0x0 ; base bits 16 - 23
+  db 0x0 ; base bits 16 - 23
   db 10010010b ; 1st flags and type flags
   db 11001111b ; 2nd flags and limit bits
   db 0x0 ; base bits 24 -31
