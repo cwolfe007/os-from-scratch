@@ -1,7 +1,8 @@
 [bits 32]
 ;Define some constants
-VIDEO_MEMORY equ 0xb8000
-WHITE_ON_BLACK equ 0x0f
+VIDEO_MEMORY equ 0xb8000 ; VGA
+WHITE_ON_BLACK equ 0x0f ; VGA setting
+; VIDEO_MEMORY equ 0x3f8 ; Serial
 
 ;print null terminated string at EDX
 print_string_pm:
@@ -10,7 +11,7 @@ print_string_pm:
 
 print_string_pm_loop:
   mov al, [ebx]
-  mov ah, WHITE_ON_BLACK
+  mov ah, WHITE_ON_BLACK ; VGA setting
   
   ; if we hit the null terminator, go to done
   cmp al, 0
