@@ -1,7 +1,7 @@
 ; GDT
 gdt_start :
 
-gdt_null:
+gdt_null: ;mandatory null descriptor
   dd 0x0 ; double word - 4bytes
   dd 0x0 ; double word - 4bytes
 
