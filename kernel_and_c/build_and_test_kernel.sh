@@ -8,7 +8,7 @@ fi
 
 KERNEL_FILE="kernel"
 ASM_FILE="${KERNEL_FILE}.asm"
-BIN_FILE="${ASM_FILE%.*}.bin"
+BIN_FILE="${ASM_FILE%.*}-boot.bin"
 K_C_FILE="${KERNEL_FILE}.c"
 K_O_FILE="${KERNEL_FILE}.o"
 K_B_FILE="${KERNEL_FILE}.bin"
@@ -17,9 +17,9 @@ OS_IMAGE_BIN="os-image.bin"
 # Compile the boot sector
 nasm "$ASM_FILE" -f bin -o "$BIN_FILE"
 
-# Compile the kernel and link to 0x1000
-gcc -ffreestanding -c $K_C_FILE -o $K_O_FILE
-ld -o $K_B_FILE -Ttext 0x1000 $K_O_FILE --oformat binary
+# Compile the kernel (in 32bit) and link to 0x1000
+gcc -ffreestanding -c $K_C_FILE -o $K_O_FILE -m32
+ld -m elf_i386 -o $K_B_FILE -Ttext 0x1000 $K_O_FILE --oformat binary
 
 # Create the kernel image
 cat $BIN_FILE $K_B_FILE >"$OS_IMAGE_BIN"
