@@ -35,14 +35,15 @@ load_kernel:
   mov bx, KERNEL_OFFSET
   mov dh, 15 ; Load the first 15 sectors (excluding bootdrive)
   mov dl, [BOOT_DRIVE] ; Load the boot drive sector from disk where our kernel lives
-  call disk_loa ret
+  call disk_load
+  ret
 
 ; Start to switch to protected_mode
 [bits 32]
 ; Area to land after swithcing to protected_mode
 
 BEGIN_PM:
-  mov ebs, MSG_PROT_MODE ;print message indicating we landed in protected_mode as epxected 
+  mov ebx, MSG_PROT_MODE ;print message indicating we landed in protected_mode as epxected 
   call print_string_pm
 
   call KERNEL_OFFSET ; Jump to where we *think* the kernel is, YOLO
@@ -51,9 +52,9 @@ BEGIN_PM:
 
 ; Global vars
 BOOT_DRIVE db 0
-MSG_REAL_MODE "You are in 16 bit REAL mode",0
-MSG_PROT_MODE "You landed in 32 bit PROTECTED mode",0
-MSG_LOAD_KERNEL "Loading the kernel now into memory, glhf dont die",0
+MSG_REAL_MODE db "You are in 16 bit REAL mode",0
+MSG_PROT_MODE db "You landed in 32 bit PROTECTED mode",0
+MSG_LOAD_KERNEL db "Loading the kernel now into memory, glhf dont die",0
 
 ;padding and magic number
 times 510-($-$$) db 0
