@@ -52,9 +52,9 @@ BEGIN_PM:
 
 ; Global vars
 BOOT_DRIVE db 0
-MSG_REAL_MODE db "You are in 16 bit REAL mode",0
-MSG_PROT_MODE db "You landed in 32 bit PROTECTED mode",0
-MSG_LOAD_KERNEL db "Loading the kernel now into memory, glhf dont die",0
+MSG_REAL_MODE db "You are in 16 bit REAL mode - ",0
+MSG_PROT_MODE db "You landed in 32 bit PROTECTED mode - ",0
+MSG_LOAD_KERNEL db "Loading the kernel now into memory, glhf dont die - ",0
 
 ;padding and magic number
 times 510-($-$$) db 0
