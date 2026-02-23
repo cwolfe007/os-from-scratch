@@ -15,6 +15,7 @@ disk_load:
   cmp dh, al ; if read sectors does not match the expected sectors
   jne disk_error ; display error message
   ret
+
 disk_error:
   mov bx, DISK_ERROR
   call print_string
