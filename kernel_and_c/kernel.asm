@@ -33,7 +33,7 @@ load_kernel:
   ;Prepare sectors for disk load routines
   
   mov bx, KERNEL_OFFSET
-  mov dh, 15 ; Load the first 15 sectors (excluding bootdrive)
+  mov dh, 9 ; Load the first 9 sectors (1-9 seem valid) (excluding bootdrive)
   mov dl, [BOOT_DRIVE] ; Load the boot drive sector from disk where our kernel lives
   call disk_load
   ret
