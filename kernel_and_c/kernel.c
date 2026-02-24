@@ -1,3 +1,5 @@
+void some_function(){}
+
 void main() {
   // Create a pointer char 
   // point it at the first cell in memory
