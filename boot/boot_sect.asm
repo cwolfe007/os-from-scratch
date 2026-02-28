@@ -18,11 +18,11 @@ KERNEL_OFFSET equ 0x1000 ; This is the memory offset which we laod our kernel
   jmp $
 
 ; Include routines 
-%include "../print_string_example/print_string.asm"
-%include "../protected_mode/gdt.asm"
-%include "../protected_mode/print_string_pm.asm"
-%include "../protected_mode/switch_to_pm.asm"
-%include "../disk/disk_load.asm"
+%include "boot/print_string/print_string.asm"
+%include "boot/protected_mode/gdt.asm"
+%include "boot/protected_mode/print_string_pm.asm"
+%include "boot/protected_mode/switch_to_pm.asm"
+%include "boot/disk/disk_load.asm"
 
 [bits 16]
 
