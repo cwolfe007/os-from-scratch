@@ -16,12 +16,12 @@ kernel.bin: kernel_entry.o kernel.o
 # $^ = kernel_entry.o kernel.o
 
 # Build our kernel entry object file
-kernel.o: kernel.c
+kernel.o: kernel/kernel.c
 	gcc -ffreestanding -c $< -o $@
 # $< = kernel.c $@ = kernel.o
 
-kernel_entry.o: kernel_entry.asm
+kernel_entry.o: kernel/kernel_entry.asm
 	nasm $< -f elf -o $@
 
-boot_sect.bin: boot_sect.asm
-	nasm $< -f -bin -o $@
+boot_sect.bin: boot/boot_sect.asm
+	nasm $< -f bin -o $@
