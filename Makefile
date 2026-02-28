@@ -27,4 +27,4 @@ boot_sect.bin: boot/boot_sect.asm
 	nasm $< -f bin -o $@
 
 clean:
-	rm *.o *.bin
+	rm *.o *.bin os-image
