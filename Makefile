@@ -38,5 +38,5 @@ kernel.bin: kernel/kernel_entry.o ${OBJ}
 	nasm $< -f bin  -o $@
 
 clean:
-	rm *.o *.bin os-image
-	rm kernel/*.o boot/*.bin drivers/*.o
+	find . -name "*.o" -o \( -name "*.bin" -o -name "os-image" \) -type f  -exec /bin/bash -c "rm -v {}" \;
+
