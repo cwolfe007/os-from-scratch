@@ -1,5 +1,16 @@
 # This builds binary of our kernel from dependent object files
 
+# Add wildcard and code detection logic
+# Allows us to find code automatically w/o updating the makefile frequently
+#
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c )
+HEADERS = $( kernel/*.h drivers/*.h )
+
+# TODO: make sources dependent on header files
+#
+# Convert <file>.c to <file>.o to give list of object files to build
+OBJ = ${C_SOURCES:.c=.o}
+
 # when no param is given, make assumes first target at nearest top of file
 all: os-image
 
@@ -11,20 +22,21 @@ os-image: boot_sect.bin kernel.bin
 
 # Syntax = kernel.bin (file generated) : kernel_entry.o kernel.o (files needed to build kernel.bin)
 # Build the kenernal binary
-kernel.bin: kernel_entry.o kernel.o
+kernel.bin: kernel_entry.o ${OBJ}
 	ld -m elf_i386 -o kernel.bin -Ttext 0x1000 $^ --oformat binary
 # $^ = kernel_entry.o kernel.o
 
 # Build our kernel entry object file
-kernel.o: kernel/kernel.c
+%.o: %.c ${HEADERS}
 	gcc -ffreestanding -m32 -c $< -o $@
 # $< = kernel.c $@ = kernel.o
 
-kernel_entry.o: kernel/kernel_entry.asm
+%.o: %.asm
 	nasm $< -f elf -o $@
 
-boot_sect.bin: boot/boot_sect.asm
-	nasm $< -f bin -o $@
+%.bin: %.asm
+	nasm $< -f bin -I '../../16bit/' -o $@
 
 clean:
 	rm *.o *.bin os-image
+	rm kernel/*.o boot/*.bin drivers/*.o
