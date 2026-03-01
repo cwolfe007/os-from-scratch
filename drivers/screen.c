@@ -48,6 +48,7 @@ void set_cursor(int offset){
 int handle_scrolling(int offset){
 
 }
+
 /* Print a char on the screen at col, row, or at curson position */
 void print_char(char character, int col, int row, char attribute_byte) {
   // Create a byte char pointer to the start of video memory
