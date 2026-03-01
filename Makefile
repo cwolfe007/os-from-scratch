@@ -12,17 +12,17 @@ HEADERS = $( kernel/*.h drivers/*.h )
 OBJ = ${C_SOURCES:.c=.o}
 
 # when no param is given, make assumes first target at nearest top of file
-all: os-image
+all: run
 
 run: os-image 
 	qemu-system-x86_64 -drive format=raw,file="$<" #-nographic -serial mon:stdio
 
-os-image: boot_sect.bin kernel.bin
+os-image: boot/boot_sect.bin kernel.bin
 	cat $^ > $@
 
 # Syntax = kernel.bin (file generated) : kernel_entry.o kernel.o (files needed to build kernel.bin)
 # Build the kenernal binary
-kernel.bin: kernel_entry.o ${OBJ}
+kernel.bin: kernel/kernel_entry.o ${OBJ}
 	ld -m elf_i386 -o kernel.bin -Ttext 0x1000 $^ --oformat binary
 # $^ = kernel_entry.o kernel.o
 
@@ -34,8 +34,8 @@ kernel.bin: kernel_entry.o ${OBJ}
 %.o: %.asm
 	nasm $< -f elf -o $@
 
-%.bin: %.asm
-	nasm $< -f bin -I '../../16bit/' -o $@
+%.bin: %.asm 
+	nasm $< -f bin  -o $@
 
 clean:
 	rm *.o *.bin os-image
