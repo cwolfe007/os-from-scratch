@@ -9,4 +9,4 @@
 #define REG_SCREEN_DATA 0x3D5
 
 /* Print a char on the screen at col, row, or at curson position */
-void print_char(char character, int col, int row, char attribute_byte);
+void print(char* message);

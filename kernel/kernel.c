@@ -7,5 +7,5 @@ void main() {
   char* video_memory = (char*) 0xb8000;
   // At the address of video_memory, store 'X'
   // *video_memory = 'X' ;
-  print_char('E',1,0,0);
+  print('hello world');
 }

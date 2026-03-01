@@ -49,6 +49,22 @@ int handle_scrolling(int offset){
 
 }
 
+void print(char* message){
+ print_at(message, -1, -1)
+}
+
+void print_char_at(char* message, int col, int row, char attribute_byte){
+  // if col and row are non negative, set the cursor to th next offset
+  if (col >= 0 && row >= 0){
+    set_cursor(get_screen_offset(col, row));
+  }
+  int i = 0;
+  // Go through string until null (i.e. 0) is hit 
+  while (message[i] != 0) {
+    print_char(message[i++], col, row, 0); // 0 for attribute_byte will defualt to WHITE_ON_BLACK
+  }
+}
+
 /* Print a char on the screen at col, row, or at curson position */
 void print_char(char character, int col, int row, char attribute_byte) {
   // Create a byte char pointer to the start of video memory
