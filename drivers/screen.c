@@ -35,35 +35,22 @@ int get_screen_offset(int target_col, int target_row){
 
 void set_cursor(int offset){
   offset /= 2;
-  char high_offset = offset << 8;
-  char low_offset = offset >> 8;
-  // Set the high byte of the cursor offset
+  int offset_save = offset;
+  unsigned char high = offset >> 8;
+  unsigned char low = offset_save & 0xFF;
+  // write new offset
   port_byte_out(REG_SCREEN_CTRL, 14);
-  port_byte_out(REG_SCREEN_DATA, high_offset); 
-  // Set the low byte of the cursor offset
+  port_byte_out(REG_SCREEN_DATA, high); 
   port_byte_out(REG_SCREEN_CTRL, 15);
-  port_byte_out(REG_SCREEN_DATA, low_offset); 
+  port_byte_out(REG_SCREEN_DATA, low); 
+  
 }
 
 int handle_scrolling(int offset){
 
 }
 
-void print(char* message){
- print_at(message, -1, -1)
-}
 
-void print_char_at(char* message, int col, int row, char attribute_byte){
-  // if col and row are non negative, set the cursor to th next offset
-  if (col >= 0 && row >= 0){
-    set_cursor(get_screen_offset(col, row));
-  }
-  int i = 0;
-  // Go through string until null (i.e. 0) is hit 
-  while (message[i] != 0) {
-    print_char(message[i++], col, row, 0); // 0 for attribute_byte will defualt to WHITE_ON_BLACK
-  }
-}
 
 /* Print a char on the screen at col, row, or at curson position */
 void print_char(char character, int col, int row, char attribute_byte) {
@@ -84,6 +71,7 @@ void print_char(char character, int col, int row, char attribute_byte) {
    offset = get_cursor(); 
   }
 
+
   // if a newline character is detected, set the offset to the end of 
   // the current row, this way we move down to the next row at the first column 
   if (character == '\n') {
@@ -99,7 +87,22 @@ void print_char(char character, int col, int row, char attribute_byte) {
   //Update the offset to the "next" character cell (next = character and attribute_byte)
   offset += 2;
   // Make scrolling adjustment, for when we reach bottom of the screen
-  offset = handle_scrolling(offset);
+  // offset = handle_scrolling(offset);
   // update the cursor position
   set_cursor(offset);
+}
+
+void print_char_at(char* message, int col, int row, char attribute_byte){
+  // if col and row are non negative, set the cursor to th next offset
+  if (col >= 0 && row >= 0){
+    set_cursor(get_screen_offset(col, row));
+  }
+  int i = 0;
+  // Go through string until null (i.e. 0) is hit 
+  while (message[i] != 0) {
+    print_char(message[i++], col, row, 0); // 0 for attribute_byte will defualt to WHITE_ON_BLACK
+  }
+}
+void print(char* message){
+ print_char_at(message, -1, -1, 0);
 }
