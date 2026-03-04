@@ -47,7 +47,24 @@ void set_cursor(int offset){
 }
 
 int handle_scrolling(int offset){
-
+// Scroll when end of screen is reached
+// If the offset is at the end or greater then the row
+  // move the current row up
+  // start writing at next row at first col
+// offset should be doubled for the char and attribute_byte 
+int doubled_offset = offset*2
+int end_of_memory = MAX_COLS* MAX_ROWS
+if (offset >= end_of_memory) {
+// shift the offset a 1 row "back"
+    // the number of cols accounts for 1 row
+offset = offset - MAX_COLS 
+}  
+// Questions
+  // what happens to rows not on screen?
+    // Todo, save lines to memory
+  // What  happens when we want to scroll down?
+  // todo: implment after hardware I/O is implmented
+  return offset
 }
 
 
@@ -87,7 +104,7 @@ void print_char(char character, int col, int row, char attribute_byte) {
   //Update the offset to the "next" character cell (next = character and attribute_byte)
   offset += 2;
   // Make scrolling adjustment, for when we reach bottom of the screen
-  // offset = handle_scrolling(offset);
+  offset = handle_scrolling(offset);
   // update the cursor position
   set_cursor(offset);
 }
@@ -100,7 +117,7 @@ void print_char_at(char* message, int col, int row, char attribute_byte){
   int i = 0;
   // Go through string until null (i.e. 0) is hit 
   while (message[i] != 0) {
-    print_char(message[i++], col, row, 0); // 0 for attribute_byte will defualt to WHITE_ON_BLACK
+    print_char(message[i++], col, row, attribute_byte); // 0 for attribute_byte will defualt to WHITE_ON_BLACK
   }
 }
 void print(char* message){
