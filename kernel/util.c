@@ -28,3 +28,9 @@ unsigned short port_word_in(unsigned short port) {
 unsigned short port_word_out(unsigned short port, unsigned short data) {
   __asm__("out %%ax, %%dx" : :"a" (data), "d" (port));
 }
+
+void memory_copy(char* src, char* dest, int num_bytes) {
+   for (int i=0; i < num_bytes; i++){
+    dest[i] = src[i];
+  }
+}
