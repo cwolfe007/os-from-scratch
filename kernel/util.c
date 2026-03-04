@@ -31,6 +31,6 @@ unsigned short port_word_out(unsigned short port, unsigned short data) {
 
 void memory_copy(char* src, char* dest, int num_bytes) {
    for (int i=0; i < num_bytes; i++){
-    dest[i] = src[i];
+    *(dest + i) = *(src + 1);
   }
 }

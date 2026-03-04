@@ -48,18 +48,28 @@ int handle_scrolling(int offset){
 // Scroll when end of screen is reached
   // move the current row up
   // start writing at next row at first col
-int end_of_memory = MAX_COLS* MAX_ROWS;
-if (offset >= end_of_memory) {
-// shift the offset a 1 row "back"
-    // the number of cols accounts for 1 row
-  offset = offset - (end_of_memory - MAX_COLS);
-}  
-// Questions
-  // what happens to rows not on screen?
-    // Todo, save lines to memory
-  // What  happens when we want to scroll down?
-  // todo: implment after hardware I/O is implmented
-  return offset;
+int end_of_memory = (MAX_COLS* MAX_ROWS)*2;
+
+    if (offset >= end_of_memory) {
+    // shift the offset a 1 row "back"
+        // the number of cols accounts for 1 row
+        // we need to copy memory without the leading row
+        for (int i=0; i < MAX_ROWS; i++){
+          // source is the pointer to video memory + offset
+          unsigned char *src_pointer = (unsigned char*) get_screen_offset(0,i) + VIDEO_ADDRESS;
+          // dest is the pointer to video memory + offset, but one byte behind
+          unsigned char *dest_pointer = (unsigned char*) get_screen_offset(0,i - 1) + VIDEO_ADDRESS;
+          memory_copy(src_pointer, dest_pointer, MAX_COLS * 2);
+        }
+
+    unsigned char *last_row_pointer = (unsigned char*) get_screen_offset(0,MAX_ROWS) + VIDEO_ADDRESS;
+    for (int i=0; i < MAX_ROWS; i++){
+        *(last_row_pointer + i ) = 0; //last_row_pointer[i] = 0
+    }
+    //set offset to the new last line
+    offset = (MAX_ROWS - 1) * MAX_COLS;
+    }  
+    return offset;
 }
 
 
@@ -102,6 +112,14 @@ void print_char(char character, int col, int row, char attribute_byte) {
   offset = handle_scrolling(offset);
   // update the cursor position
   set_cursor(offset);
+}
+
+void clear_screen(){
+  unsigned char *vidmem = (unsigned char *) VIDEO_ADDRESS;
+  for (int i=0; i < (MAX_COLS * MAX_ROWS ) * 2; i++ ){
+    *( vidmem + i) = 0;
+  }
+  set_cursor(0);
 }
 
 void print_char_at(char* message, int col, int row, char attribute_byte){
