@@ -1,6 +1,4 @@
 #include "screen.h"
-#include "../kernel/low_level.h"
-
 
 int get_cursor() {
   int offset;
@@ -48,23 +46,20 @@ void set_cursor(int offset){
 
 int handle_scrolling(int offset){
 // Scroll when end of screen is reached
-// If the offset is at the end or greater then the row
   // move the current row up
   // start writing at next row at first col
-// offset should be doubled for the char and attribute_byte 
-int doubled_offset = offset*2
-int end_of_memory = MAX_COLS* MAX_ROWS
+int end_of_memory = MAX_COLS* MAX_ROWS;
 if (offset >= end_of_memory) {
 // shift the offset a 1 row "back"
     // the number of cols accounts for 1 row
-offset = offset - MAX_COLS 
+  offset = offset - (end_of_memory - MAX_COLS);
 }  
 // Questions
   // what happens to rows not on screen?
     // Todo, save lines to memory
   // What  happens when we want to scroll down?
   // todo: implment after hardware I/O is implmented
-  return offset
+  return offset;
 }
 
 

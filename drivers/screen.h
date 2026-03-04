@@ -1,6 +1,8 @@
+#include "../kernel/util.h"
+
 #define VIDEO_ADDRESS 0xb8000
-#define MAX_ROWS 25
-#define MAX_COLS 80
+#define MAX_ROWS 2
+#define MAX_COLS 50
 // Attribute byte for our default color scheme
 #define WHITE_ON_BLACK 0x0f
 
