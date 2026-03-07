@@ -4,4 +4,5 @@
 *.bin
 os-image
 bare-bones/src/*
+bare-bones/src/
 
