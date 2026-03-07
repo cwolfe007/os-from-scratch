@@ -1,3 +1,7 @@
 *.o 
+**/*.o 
+**/*.bin
 *.bin
 os-image
+bare-bones/src/*
+
