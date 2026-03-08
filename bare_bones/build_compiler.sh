@@ -24,7 +24,10 @@ if [[ ! -d build-binutils ]]; then
   mkdir build-binutils
 fi
 
-if [[ ! -f $PREFIX/$TARGET-ld ]]; then
+if [[ ! -f $PREFIX/bin/$TARGET-ld ]]; then
+  echo "does not yet exist $PREFIX/$TARGET-ld"
+  echo "starting build-binutils"
+  sleep 2
   pushd build-binutils
   # compile linker and utilities
   ../binutils-gdb/configure --target=$TARGET --prefix="$PREFIX" --with-sysroot --disable-nls --disable-werror
@@ -33,7 +36,10 @@ if [[ ! -f $PREFIX/$TARGET-ld ]]; then
   popd
 fi
 
-if [[ ! -f $PREFIX/$TARGET-gdb ]]; then
+if [[ ! -f $PREFIX/bin/$TARGET-gdb ]]; then
+  echo "does not yet exist $PREFIX/$TARGET-gdb"
+  echo "starting binutils-gdb"
+  sleep 2
   pushd binutils-gdb
   # compile gdb
   ./gdb/configure --target=$TARGET --prefix="$PREFIX" --disable-werror
@@ -45,8 +51,11 @@ fi
 # The $PREFIX/bin dir _must_ be in the PATH. We did that above.
 which -- $TARGET-as || echo $TARGET-as is not in the PATH
 
-if [[ ! -f $PREFIX/$TARGET-gcc ]]; then
-  # compile gdb
+if [[ ! -f $PREFIX/bin/$TARGET-gcc ]]; then
+  echo "does not yet exist $PREFIX/$TARGET-gdb"
+  echo "starting gcc"
+  sleep 2
+  # compile gcc
   rm -rf build-gcc
   mkdir build-gcc
   pushd build-gcc
