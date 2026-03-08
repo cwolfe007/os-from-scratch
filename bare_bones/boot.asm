@@ -50,7 +50,7 @@ _start:
   ; let the kernel do the rest. so now just loop forever
   cli
 
-.hang
+.hang:
   jmp .hang
 
 .end:
