@@ -8,7 +8,7 @@ SECTIONS
   /* With UEFI, start 2M as the start of the offset */
   . = 2M;
 
-  .test BLOCK(4M) : ALIGN(4K)
+  .test BLOCK(4K) : ALIGN(4K)
   {
      *(.multiboot)
      *(.text)

@@ -1,5 +1,5 @@
 run: os-image 
-	qemu-system-i386 -kernel "$<" -nographic -serial mon:stdio
+	qemu-system-i386 -kernel "$<" #-nographic -serial mon:stdio
 
 os-image: boot.o kernel.o
 	/home/cwolfe/opt/cross/bin/i686-elf-gcc -T linker.ld -o $@ -ffreestanding -O2 -nostdlib $^ -lgcc  
