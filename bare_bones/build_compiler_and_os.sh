@@ -1,5 +1,5 @@
 #!/bin/bash
-
+source ./install_build_deps.sh
 set -x
 export PREFIX="$HOME/opt/cross"
 export TARGET=i686-elf
@@ -70,3 +70,4 @@ if [[ ! -f $PREFIX/bin/$TARGET-gcc ]]; then
 fi
 # get out of src/
 popd
+make clean && make
