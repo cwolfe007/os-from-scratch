@@ -6,7 +6,7 @@
 .set CHECKSUM, -(MAGIC + FLAGS) # CHECKSUM of the above to prove multiboot
 
 # Declare multiboot header
-.section .multiboot.data "aw"
+.section .multiboot.data, "aw"
 .align 4
 .long MAGIC
 .long FLAGS
@@ -21,7 +21,7 @@ stack_top:
 #Preallocate pages, but we do not yet know the available memory addresses
 # bootloader may have taken addresses, so we let the bootloader know that
 # addresses to avoid
-.section .bss, "aw" @nobits
+.section .bss, "aw", @nobits
    .align 4096
 boot_page_directory:
   .skip 4096
@@ -56,7 +56,7 @@ _start:
  # Store a page (4096 bytes)
  addl $4096, %esi
 # entry in boot table is 4 bytes
- addl, $4, %esi
+ addl $4, %esi
 #loop to next entry
  loop 1b # go back to section 1
 3:
@@ -69,19 +69,19 @@ _start:
   # we need this since when we start paging, the assumed positon 0 in virtual memory not be known by th cpu on how stack_top
   # map for pyshical memory 
   #(virtualy from 0x0 -> 0x3FFFFF, this identity mapping to the kernel) 
-  movl $(boot_page_table1 - xC0000000 + 0x003), boot_page_directory - 0xC0000000 + 0
+  movl $(boot_page_table1 - 0xC0000000 + 0x003), boot_page_directory - 0xC0000000 + 0
 
   # and the page directory entry 768 (0xC0000000 -> xC03FFFFF) (mapping to the higher half)
   # 768 is from xC0000000 / 4MiB (the page directory entry) 
   # this is effectively saying we want to start the kernel at position 768 and leave 767 directory entries for user space
-  movl $(boot_page_table1 - xC0000000 + 0x003), boot_page_directory - 0xC0000000 + 786 * 4
+  movl $(boot_page_table1 - 0xC0000000 + 0x003), boot_page_directory - 0xC0000000 + 786 * 4
   
   # Set cr3 to the address of the boot_page directory
-  movl $(boot_page_directory - xC0000000), %ecx
-  movl %ecx, crc3
+  movl $(boot_page_directory - 0xC0000000), %ecx
+  movl %ecx, %cr3
 
  # enable paging and write-protect bit
- movl %cro, %ecx
+ movl %cr0, %ecx
  #bits 10000... (ie 0x80000...) is Paging enabled
  #bits 0000 0000 0000 0001 ... (ie 0x00010000) is write-protect enabled
  orl $0x80010000, %ecx
@@ -96,8 +96,8 @@ _start:
   movl $0, boot_page_directory + 0
 
   # Reload crc3 to force the flush of the translation lookaside buffer
-  movl %crc3, %ecx
-  movl %ecx, %crc3
+  movl %cr3, %ecx
+  movl %ecx, %cr3
 
   #set up the stack
   mov $stack_top, %esp
