@@ -21,21 +21,23 @@ SECTIONS
   {
     *(.text)
   }
+
   .rodata ALIGN (4K) : AT (ADDR (.rodata) - 0xC0000000)
   {
     *(.rodata)
-}
+  }
+
   .data ALIGN (4K) : AT (ADDR (.data) - 0xC0000000)
   {
     *(.data)
-}
+  }
   .bss ALIGN (4K) : AT (ADDR (.bss) - 0xC0000000)
   {
     *(COMMON)
     *(.bss)
     *(.bootstrap_stack)
-}
-/* Add symbol to indicate the end of address of the kernel
- */
- _kernel_end = .;
+  }
+  /* Add symbol to indicate the end of address of the kernel
+  */
+  _kernel_end = .;
 }

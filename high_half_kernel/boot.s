@@ -41,7 +41,7 @@ _start:
   movl $1023, %ecx
 1:
   # Only map the kernel
-  cmpl _kernel_start, %esi
+  cmpl $_kernel_start, %esi
   jl 2f # jmp to 2
   cmpl $(_kernel_end - 0xC0000000), %esi
   jge 3f # jmp to 3
@@ -56,7 +56,7 @@ _start:
  # Store a page (4096 bytes)
  addl $4096, %esi
 # entry in boot table is 4 bytes
- addl $4, %esi
+ addl $4, %edi
 #loop to next entry
  loop 1b # go back to section 1
 3:
@@ -74,7 +74,7 @@ _start:
   # and the page directory entry 768 (0xC0000000 -> xC03FFFFF) (mapping to the higher half)
   # 768 is from xC0000000 / 4MiB (the page directory entry) 
   # this is effectively saying we want to start the kernel at position 768 and leave 767 directory entries for user space
-  movl $(boot_page_table1 - 0xC0000000 + 0x003), boot_page_directory - 0xC0000000 + 786 * 4
+  movl $(boot_page_table1 - 0xC0000000 + 0x003), boot_page_directory - 0xC0000000 + 768 * 4
   
   # Set cr3 to the address of the boot_page directory
   movl $(boot_page_directory - 0xC0000000), %ecx
@@ -90,6 +90,8 @@ _start:
  #jump to hight half of the memory with absolute jmp
  lea 4f, %ecx
  jmp *%ecx
+
+.section .text
 
 4:
   # At this point, paging is fully set up and enabled
