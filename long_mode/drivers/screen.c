@@ -1,0 +1,138 @@
+#include "screen.h"
+
+int get_cursor() {
+  int offset;
+  // Write byte to the port register
+  // Register 14 = high byte of register of cursor offset
+  port_byte_out(REG_SCREEN_CTRL, 14);
+  // Read byte from the port register
+  offset = port_byte_in(REG_SCREEN_DATA) << 8;
+
+  // Register 15 = low byte of register of cursor offset
+  port_byte_out(REG_SCREEN_CTRL, 15);
+  offset += port_byte_in(REG_SCREEN_DATA);
+  // Since the cursor offset reported by the VGA 
+  // is the hardware number of the characters
+  // we multiply by two to convert it to 
+  // a character cell offset
+  return offset * 2;
+}
+
+int get_screen_offset(int target_col, int target_row){
+  int row_pos;
+  int col_pos;
+  int char_byte_alloc_pos;
+  // Find the row
+  row_pos = target_row * MAX_COLS;
+  // find column in the row 
+  col_pos = row_pos + target_col;
+  // The character is chat byte and attribute_byte
+  char_byte_alloc_pos = col_pos * 2;
+  return char_byte_alloc_pos;
+}
+
+void set_cursor(int offset){
+  offset /= 2;
+  int offset_save = offset;
+  unsigned char high = offset >> 8;
+  unsigned char low = offset_save & 0xFF;
+  // write new offset
+  port_byte_out(REG_SCREEN_CTRL, 14);
+  port_byte_out(REG_SCREEN_DATA, high); 
+  port_byte_out(REG_SCREEN_CTRL, 15);
+  port_byte_out(REG_SCREEN_DATA, low); 
+  
+}
+
+int handle_scrolling(int offset){
+// Scroll when end of screen is reached
+  // move the current row up
+  // start writing at next row at first col
+int end_of_memory = (MAX_COLS* MAX_ROWS)*2;
+
+    if (offset >= end_of_memory) {
+    // shift the offset a 1 row "back"
+        // the number of cols accounts for 1 row
+        // we need to copy memory without the leading row
+        for (int i=0; i < MAX_ROWS; i++){
+          // source is the pointer to video memory + offset
+          unsigned char *src_pointer = (unsigned char*) get_screen_offset(0,i) + VIDEO_ADDRESS;
+          // dest is the pointer to video memory + offset, but one byte behind
+          unsigned char *dest_pointer = (unsigned char*) get_screen_offset(0,i - 1) + VIDEO_ADDRESS;
+          memory_copy(src_pointer, dest_pointer, MAX_COLS * 2);
+        }
+
+    unsigned char *last_row_pointer = (unsigned char*) get_screen_offset(0,MAX_ROWS) + VIDEO_ADDRESS;
+    for (int i=0; i < MAX_ROWS; i++){
+        *(last_row_pointer + i ) = 0; //last_row_pointer[i] = 0
+    }
+    //set offset to the new last line
+    offset = (MAX_ROWS - 1) * MAX_COLS;
+    }  
+    return offset;
+}
+
+
+
+/* Print a char on the screen at col, row, or at curson position */
+void print_char(char character, int col, int row, char attribute_byte) {
+  // Create a byte char pointer to the start of video memory
+  unsigned char *vidmem = (unsigned char *) VIDEO_ADDRESS;
+  // if attribute_byte is 0, assume default style
+  if (!attribute_byte) {
+    attribute_byte = WHITE_ON_BLACK;
+  }
+
+  // Get video memory offset for screen location
+  int offset;
+  // If col and row are >0, use them for offset
+  if (col >= 0 && row >= 0) {
+    offset = get_screen_offset(col, row);
+  } else {
+    // otherwise get cursor position
+   offset = get_cursor(); 
+  }
+
+
+  // if a newline character is detected, set the offset to the end of 
+  // the current row, this way we move down to the next row at the first column 
+  if (character == '\n') {
+    int rows = offset / (2*MAX_COLS);
+    offset = get_screen_offset(79, rows);
+  } else {
+    // otherwise, write the character and its attribute_byte to 
+    // video memory at our calculated offset
+    vidmem[offset] = character;
+    vidmem[offset+1] = attribute_byte;
+  }
+
+  //Update the offset to the "next" character cell (next = character and attribute_byte)
+  offset += 2;
+  // Make scrolling adjustment, for when we reach bottom of the screen
+  offset = handle_scrolling(offset);
+  // update the cursor position
+  set_cursor(offset);
+}
+
+void clear_screen(){
+  unsigned char *vidmem = (unsigned char *) VIDEO_ADDRESS;
+  for (int i=0; i < (MAX_COLS * MAX_ROWS ) * 2; i++ ){
+    *( vidmem + i) = 0;
+  }
+  set_cursor(0);
+}
+
+void print_char_at(char* message, int col, int row, char attribute_byte){
+  // if col and row are non negative, set the cursor to th next offset
+  if (col >= 0 && row >= 0){
+    set_cursor(get_screen_offset(col, row));
+  }
+  int i = 0;
+  // Go through string until null (i.e. 0) is hit 
+  while (message[i] != 0) {
+    print_char(message[i++], col, row, attribute_byte); // 0 for attribute_byte will defualt to WHITE_ON_BLACK
+  }
+}
+void print(char* message){
+ print_char_at(message, -1, -1, 0);
+}
