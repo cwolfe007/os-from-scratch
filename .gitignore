@@ -3,6 +3,7 @@
 **/*.bin
 *.bin
 os-image
-**/bare-bones/src/**
-**/bare-bones/src/
+os-wiki-dev-tutorials/bare-bones/src/**
+os-wiki-dev-tutorials/bare-bones/src/**
+/os-wiki-dev-tutorials/bare-bonesare-bones/src/
 
