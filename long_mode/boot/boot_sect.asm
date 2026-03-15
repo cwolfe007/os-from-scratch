@@ -65,7 +65,7 @@ load_kernel:
   ret
 
 ; Start to switch to protected_mode
-[bits 32]
+[bits 64]
 ; Area to land after swithcing to protected_mode
 
 BEGIN_LM:
