@@ -1,5 +1,6 @@
 ; Kernel Boot Loader
 [org 0x7c00]
+
 ; If this bit and be flipped the CPUID instruction is available
 EFLAGS equ 1 << 21  
 
@@ -27,7 +28,7 @@ EFLAGS equ 1 << 21
 ;      mov ax, 1
 ;      ret
 
-KERNEL_OFFSET equ 0x1000 ; This is the memory offset which we laod our kernel
+KERNEL_OFFSET equ 0x10000 ; This is the memory offset which we laod our kernel
   mov [BOOT_DRIVE], dl ; Save disk loader contents to DL
 
   ; set up the stack
@@ -37,7 +38,7 @@ KERNEL_OFFSET equ 0x1000 ; This is the memory offset which we laod our kernel
   mov bx, MSG_REAL_MODE ; 
   call print_string
 
-  call load_kernel
+  ;call load_kernel
 
   call switch_to_lm 
 
@@ -69,6 +70,7 @@ load_kernel:
 ; Area to land after swithcing to protected_mode
 
 BEGIN_LM:
+  mov BYTE [0xb8000], 0x41 ; test to see if wew in BEGIN_LM 
   mov rbx, MSG_LONG_MODE ;print message indicating we landed in protected_mode as epxected 
   call print_string_lm
 
@@ -94,10 +96,10 @@ BEGIN_LM:
 
 ; Global vars
 BOOT_DRIVE db 0
-MSG_REAL_MODE db "You are in 16 bit REAL mode - ",0
-MSG_LONG_MODE db "You landed in 64 bit long mode - ",0
-MSG_LOAD_KERNEL db "Loading the kernel now into memory, glhf dont die - ",0
+MSG_REAL_MODE db "16 bit REAL mode - ",0
+MSG_LONG_MODE db "64 bit long mode - ",0
+MSG_LOAD_KERNEL db "Loading the kernel now",0
+MSG_TEST db "lm",0
 
-;padding and magic number
 times 510-($-$$) db 0
 dw 0xaa55

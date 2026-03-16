@@ -11,7 +11,7 @@ gdt_code : ; segment descriptor code
   db 0x0 ; Base bits 16 - 23
   db 10011010b ; 1st flags,  present 1 - priviledge 00 - descriptor type 1 -> 1001b
               ; type flags, code 1 - conforming 0 - readable 1 - accessed 0 -> 1010b
-  db 11101111b ; 2nd flags, granularity  1  - 32bit default 1 - 64bit segment 1 -  AVL 1 -> 1100b
+  db 10101111b ; 2nd flags, granularity  1  - 32bit default 1 - 64bit segment 1 -  AVL 1 -> 1100b
               ; limit - 1111b
   db 0x0 ; Base (bits 24-31)
 
