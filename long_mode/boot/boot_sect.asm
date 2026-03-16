@@ -69,10 +69,10 @@ load_kernel:
 ; Area to land after swithcing to protected_mode
 
 BEGIN_LM:
-  mov ebx, MSG_PROT_MODE ;print message indicating we landed in protected_mode as epxected 
+  mov rbx, MSG_LONG_MODE ;print message indicating we landed in protected_mode as epxected 
   call print_string_lm
 
-  call KERNEL_OFFSET ; Jump to where we *think* the kernel is, YOLO
+  ; call KERNEL_OFFSET ; Jump to where we *think* the kernel is, YOLO
   ; call checkCPUID 
 
   ; ; note because we are entering long mode, we will skip paging in protected_mode(32 bit mode)
@@ -95,7 +95,7 @@ BEGIN_LM:
 ; Global vars
 BOOT_DRIVE db 0
 MSG_REAL_MODE db "You are in 16 bit REAL mode - ",0
-MSG_PROT_MODE db "You landed in 32 bit PROTECTED mode - ",0
+MSG_LONG_MODE db "You landed in 64 bit long mode - ",0
 MSG_LOAD_KERNEL db "Loading the kernel now into memory, glhf dont die - ",0
 
 ;padding and magic number

@@ -7,9 +7,16 @@ switch_to_lm:
 
   lgdt [gdt_descriptor] ; load global descriptor table
 
-  ; switch to long mode
+  ; switch to long mode and enable protected mode
+  EFER_LM_ENABLE equ 1 << 8 ; EFER is Extended feature regiser
+  mov ecx, 0xC0000080 ; set address for reading MSR
+  rdmsr ; read manufacture specific regiser
+  or eax, EFER_LM_ENABLE
+  wrmsr
+  ; set up protected mode
+  CRO_PM_ENABLE equ 1 << 31
   mov eax, cr0 
-  or eax, 0x1 
+  or eax, CRO_PM_ENABLE 
   mov cr0, eax
 
   jmp CODE_SEG:init_lm; Make far jump to new segment to 

@@ -2,7 +2,7 @@
 ;Define some constants
 VIDEO_MEMORY equ 0xb8000 ; VGA
 WHITE_ON_BLACK equ 0x0f ; VGA setting
-; VIDEO_MEMORY equ 0x3f8 ; Serial
+;VIDEO_MEMORY equ 0x3f8 ; Serial
 
 ;print null terminated string at EDX
 print_string_lm:
@@ -17,7 +17,7 @@ print_string_lm:
     cmp al, 0
     je .print_string_lm_done
 
-    mov [edx], ax ;Store char
+    mov [rdx], ax ;Store char
 
     add rbx, 1 ; increment EBX to the next char in string
     add rdx, 2 ; move to the next character cell in vid memory
@@ -36,8 +36,8 @@ print_string_lm:
 %endmacro
 
 %macro popaq 0
-  pop rdx
-  pop rax
-  pop rbx
   pop rcx
+  pop rbx
+  pop rax
+  pop rdx
 %endmacro
