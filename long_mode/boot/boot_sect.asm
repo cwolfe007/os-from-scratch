@@ -28,7 +28,7 @@ EFLAGS equ 1 << 21
 ;      mov ax, 1
 ;      ret
 
-KERNEL_OFFSET equ 0x10000 ; This is the memory offset which we laod our kernel
+KERNEL_OFFSET equ 0x1000 ; This is the memory offset which we laod our kernel
   mov [BOOT_DRIVE], dl ; Save disk loader contents to DL
 
   ; set up the stack
@@ -38,7 +38,7 @@ KERNEL_OFFSET equ 0x10000 ; This is the memory offset which we laod our kernel
   mov bx, MSG_REAL_MODE ; 
   call print_string
 
-  ;call load_kernel
+  call load_kernel
 
   call switch_to_lm 
 
@@ -74,7 +74,7 @@ BEGIN_LM:
   mov rbx, MSG_LONG_MODE ;print message indicating we landed in protected_mode as epxected 
   call print_string_lm
 
-  ; call KERNEL_OFFSET ; Jump to where we *think* the kernel is, YOLO
+  call KERNEL_OFFSET ; Jump to where we *think* the kernel is, YOLO
   ; call checkCPUID 
 
   ; ; note because we are entering long mode, we will skip paging in protected_mode(32 bit mode)

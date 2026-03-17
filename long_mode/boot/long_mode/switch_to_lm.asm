@@ -17,11 +17,11 @@ switch_to_lm:
   ; We must also avoid the VGA memory (xa0000 -> xb8000 + (80*25))
   ; The kernel will be loaded at x1000
   
-  PLMT4_ADDR equ 0x1000
-  PDPT_ADDR equ 0x2000
-  PDT_ADDR equ 0x3000
+  PLMT4_ADDR equ 0x3000
+  PDPT_ADDR equ 0x4000
+  PDT_ADDR equ 0x5000
   ; PD_ADDR equ 0x4000
-  PT_ADDR equ 0x4000
+  PT_ADDR equ 0x6000
   PAGE_TABLE_SIZE equ 4096 ; bytes
 
   mov  bx, MSG_TEST

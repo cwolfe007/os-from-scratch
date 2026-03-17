@@ -23,7 +23,7 @@ os-image: boot/boot_sect.bin kernel.bin
 # Syntax = kernel.bin (file generated) : kernel_entry.o kernel.o (files needed to build kernel.bin)
 # Build the kenernal binary
 kernel.bin: kernel/kernel_entry.o ${OBJ}
-	ld -m elf_x86_64 -o kernel.bin -Ttext 0x10000 $^ --oformat binary
+	ld -m elf_x86_64 -o kernel.bin -Ttext 0x1000 $^ --oformat binary
 # $^ = kernel_entry.o kernel.o
 
 # Build our kernel entry object file
