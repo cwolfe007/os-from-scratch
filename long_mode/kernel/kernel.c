@@ -3,6 +3,6 @@
 void main() {
   char* message;
   message = "Hello\nWorld";
-  // clear_screen(); 
+  clear_screen(); 
   print(message);
 }
