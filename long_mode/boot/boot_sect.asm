@@ -1,3 +1,14 @@
+%macro print_disk 3
+  pusha
+  mov bx, %1 
+  mov dh, %2 ; sectors to load
+  mov dl, [BOOT_DRIVE]; load the boot dirve
+  call disk_load
+  add bx, %3
+  call print_string
+  popa
+%endmacro
+
 ; Kernel Boot Loader
 [org 0x7c00]
 
