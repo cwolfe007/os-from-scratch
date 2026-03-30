@@ -12,7 +12,7 @@ switch_to_lm:
   
   ; Set up PLMT4 tables (and the PDPT -> PD -> PT)
   ; I need space for 4096 4KiB entries (or 16KiB)
-  ; My stacks bottom is at x9000
+  ; My stacks bottom is at x8000
   ; I need 2 ^ 16 spaces down (i.e. x4000) for the page data structures
   ; We must also avoid the VGA memory (xa0000 -> xb8000 + (80*25))
   ; The kernel will be loaded at x1000
@@ -24,8 +24,6 @@ switch_to_lm:
   PT_ADDR equ 0x6000
   PAGE_TABLE_SIZE equ 4096 ; bytes
 
-  mov  bx, MSG_TEST
-  call print_string
   ; set up the table and zero out the memory
   mov edi, PLMT4_ADDR
   mov cr3, edi ; cr3 is where the cpu looks for page table addresses
@@ -41,8 +39,6 @@ switch_to_lm:
   or eax, CR4_PAE_ENABLE
   mov cr4, eax
 
-  mov  bx, MSG_TEST
-  call print_string
   ; Now we link the first entries of each table
 
   ; The page table only uses certain parts of the address
@@ -108,7 +104,7 @@ init_lm:
   mov fs, ax
   mov gs, ax
 
-  mov rbp, 0x9000 ; Update our stack position so it is right
+  mov rbp, 0x8000 ; Update our stack position so it is right
   mov rsp, rbp    ; at the top of free space
 
   call BEGIN_LM
